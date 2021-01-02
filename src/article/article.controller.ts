@@ -1,5 +1,16 @@
-import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  ParseIntPipe,
+  Post,
+  Query,
+  ValidationPipe,
+} from '@nestjs/common';
 import { ArticleDTO } from '../model/article.dto';
+import { ArticleDateQueryDTO } from '../model/article.query.dto';
 import { ArticleService } from './article.service';
 
 @Controller('article')
@@ -7,8 +18,10 @@ export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
   @Get()
-  async getArticle(): Promise<ArticleDTO[]> {
-    return this.articleService.getArticle();
+  async getArticle(
+    @Query(ValidationPipe) query: ArticleDateQueryDTO,
+  ): Promise<ArticleDTO[]> {
+    return this.articleService.getArticle(query);
   }
 
   @Get(':id')
@@ -18,7 +31,10 @@ export class ArticleController {
 
   @Post()
   @HttpCode(201)
-  async create(@Body(new ValidationPipe({forbidNonWhitelisted: true, whitelist: true})) article: ArticleDTO): Promise<ArticleDTO> {
+  async create(
+    @Body(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true }))
+    article: ArticleDTO,
+  ): Promise<ArticleDTO> {
     return this.articleService.createArticle(article);
   }
 }
