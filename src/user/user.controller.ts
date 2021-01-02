@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Redirect,
@@ -23,8 +24,8 @@ export class UserController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): UserDTO {
-    return this.userServie.getUserById(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number): UserDTO {
+    return this.userServie.getUserById(id);
   }
 
   @Post()
@@ -34,13 +35,16 @@ export class UserController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUser: UserCRUDDTO) {
-    return this.userServie.update(Number(id), updateUser);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUser: UserCRUDDTO,
+  ) {
+    return this.userServie.update(id, updateUser);
   }
 
   @Delete(':id')
-  delete(@Param('id') id: string) {
-    return this.userServie.deleteUserById(Number(id));
+  delete(@Param('id', ParseIntPipe) id: number) {
+    return this.userServie.deleteUserById(id);
   }
 
   @Get('/help')

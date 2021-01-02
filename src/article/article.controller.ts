@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
 import { ArticleDTO } from '../model/article.dto';
 import { ArticleService } from './article.service';
 
@@ -12,8 +12,8 @@ export class ArticleController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string): Promise<ArticleDTO> {
-    return this.articleService.getArticleById(Number(id));
+  async findOne(@Param('id', ParseIntPipe) id: number): Promise<ArticleDTO> {
+    return this.articleService.getArticleById(id);
   }
 
   @Post()
