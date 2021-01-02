@@ -9,6 +9,7 @@ import {
   Post,
   Put,
   Redirect,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserCRUDDTO } from '../model/user.crud.dto';
 import { UserDTO } from '../model/user.dto';
@@ -30,7 +31,10 @@ export class UserController {
 
   @Post()
   @HttpCode(201) // custom return code
-  create(@Body() user: UserCRUDDTO) {
+  create(
+    @Body(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true }))
+    user: UserDTO,
+  ) {
     return this.userServie.createUser(user);
   }
 

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseIntPipe, Post, ValidationPipe } from '@nestjs/common';
 import { ArticleDTO } from '../model/article.dto';
 import { ArticleService } from './article.service';
 
@@ -18,7 +18,7 @@ export class ArticleController {
 
   @Post()
   @HttpCode(201)
-  async create(@Body() article: ArticleDTO): Promise<ArticleDTO> {
+  async create(@Body(new ValidationPipe({forbidNonWhitelisted: true, whitelist: true})) article: ArticleDTO): Promise<ArticleDTO> {
     return this.articleService.createArticle(article);
   }
 }
