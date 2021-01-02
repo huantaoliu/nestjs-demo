@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import moment from 'moment';
 import { ArticleDTO } from '../model/article.dto';
 import { ArticleDateQueryDTO } from '../model/article.query.dto';
@@ -48,7 +48,12 @@ export class ArticleService {
   }
 
   async getArticleById(id: number) {
-    return this.articles.find((article) => article.id === id);
+    const res = this.articles.find((article) => article.id === id);
+    if (res) {
+      return res;
+    } else {
+      throw new NotFoundException(`can't find article with id ${id}`);
+    }
   }
 
   async createArticle(article: ArticleDTO): Promise<ArticleDTO> {

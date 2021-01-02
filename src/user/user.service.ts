@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserCRUDDTO } from '../model/user.crud.dto';
 import { UserDTO } from '../model/user.dto';
 
@@ -58,7 +58,12 @@ export class UserService {
   }
 
   getUserById(id: number): UserDTO {
-    return this.users.find((user) => user.id === id);
+    const res = this.users.find((user) => user.id === id);
+    if (res) {
+      return res;
+    } else {
+      throw new NotFoundException(`can't find user with id ${id}`);
+    }
   }
 
   update(id: number, user: UserCRUDDTO) {
