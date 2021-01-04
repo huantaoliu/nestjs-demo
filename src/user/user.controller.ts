@@ -9,12 +9,15 @@ import {
   Post,
   Put,
   Redirect,
+  UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import { JwtAuthGuard } from '../guard/jwt-auth-guard';
 import { UserCRUDDTO } from '../model/user.crud.dto';
 import { UserDTO } from '../model/user.dto';
 import { UserService } from './user.service';
 
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private userServie: UserService) {}
