@@ -57,6 +57,10 @@ export class UserService {
     return this.users;
   }
 
+  async getUserByEmail(email: string): Promise<UserDTO> {
+    return this.users.find((user) => user.email === email);
+  }
+
   getUserById(id: number): UserDTO {
     const res = this.users.find((user) => user.id === id);
     if (res) {
