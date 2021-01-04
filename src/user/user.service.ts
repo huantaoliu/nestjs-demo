@@ -8,21 +8,21 @@ export class UserService {
   private users = [
     {
       id: 1,
-      firstName: 'Joe',
-      lastName: 'Beef',
-      email: 'joe@beef.com',
+      firstName: 'admin',
+      lastName: 'admin',
+      email: 'admin@admin.com',
       password: 'admin',
-      title: 'Developer',
+      title: 'Manager',
       roles: ['admin'],
     },
     {
       id: 2,
-      firstName: 'Daniel',
-      lastName: 'Lin',
-      email: 'daniel@lin.com',
-      password: 'admin',
+      firstName: 'regular',
+      lastName: 'regular',
+      email: 'regular@regular.com',
+      password: '1234',
       title: 'Developer',
-      roles: ['admin'],
+      roles: ['regular'],
     },
     {
       id: 3,
@@ -61,7 +61,7 @@ export class UserService {
     return this.users.find((user) => user.email === email);
   }
 
-  getUserById(id: number): UserDTO {
+  async getUserById(id: number): Promise<UserDTO> {
     const res = this.users.find((user) => user.id === id);
     if (res) {
       return res;
@@ -101,6 +101,6 @@ export class UserService {
       password: '',
     };
     this.users = [...this.users, newUser];
-    return this.users.length;
+    return { id: this.users.length };
   }
 }
