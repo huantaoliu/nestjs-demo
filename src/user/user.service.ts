@@ -1,9 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { UserEntity } from '../entities/user.entity';
 import { UserCRUDDTO } from '../model/user.crud.dto';
 import { UserDTO } from '../model/user.dto';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectRepository(UserEntity, 'nestjsdemo')
+    private userRepository: Repository<UserEntity>,
+  ) {}
   // we will latter replace with real db
   private users = [
     {
@@ -91,16 +98,6 @@ export class UserService {
   }
 
   async createUser(user: UserCRUDDTO) {
-    const newUser = {
-      id: this.users.length + 1,
-      firstName: user.firstName || '',
-      lastName: user.lastName || '',
-      title: user.title || '',
-      email: user.email || undefined,
-      roles: user.roles || [],
-      password: '',
-    };
-    this.users = [...this.users, newUser];
-    return { id: this.users.length };
+    return await this.userRepository.save(user);
   }
 }
