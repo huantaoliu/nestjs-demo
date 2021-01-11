@@ -26,7 +26,7 @@ export class UserController {
   constructor(private userServie: UserService) {}
 
   @Get()
-  getUser(): UserDTO[] {
+  async getUser(): Promise<UserDTO[]> {
     return this.userServie.getUsers();
   }
 
