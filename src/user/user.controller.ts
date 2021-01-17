@@ -55,6 +55,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   delete(@Param('id', ParseIntPipe) id: number) {
     return this.userServie.deleteUserById(id);
   }

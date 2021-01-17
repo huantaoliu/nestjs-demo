@@ -1,6 +1,9 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { type } from 'os';
+import { Column, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { BaseEntity, Entity } from 'typeorm';
 import { UserDTO } from '../model/user.dto';
+import { ArticleEntity } from './article.entity';
+import { CommentEntity } from './comment.entity';
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
@@ -24,6 +27,12 @@ export class UserEntity extends BaseEntity {
 
   @Column('simple-array', { nullable: true })
   roles: string[];
+
+  @OneToMany((type) => ArticleEntity, (article) => article.owner)
+  articles: ArticleEntity[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.creator)
+  comments: CommentEntity[];
 
   toUserDTO(): UserDTO {
     return {

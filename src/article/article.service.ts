@@ -1,64 +1,67 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import moment from 'moment';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Between, MoreThanOrEqual, Repository } from 'typeorm';
+import { ArticleEntity } from '../entities/article.entity';
 import { ArticleDTO } from '../model/article.dto';
 import { ArticleDateQueryDTO } from '../model/article.query.dto';
 
 @Injectable()
 export class ArticleService {
-  private articles = [
-    {
-      id: 0,
-      name: 'my article one',
-      publishDate: new Date('2020-12-01'),
-      owner: 1,
-    },
-    {
-      id: 1,
-      name: 'how to article',
-      publishDate: new Date('2020-12-11'),
-      owner: 1,
-    },
-    {
-      id: 2,
-      name: 'how to write test',
-      publishDate: new Date('2020-12-02'),
-      owner: 2,
-    },
-    {
-      id: 3,
-      name: 'nest in 20 hours',
-      publishDate: new Date('2020-12-05'),
-      owner: 3,
-    },
-    { id: 4, name: 'heefe', publishDate: new Date('2020-12-05'), owner: 2 },
-  ];
+  constructor(
+    @InjectRepository(ArticleEntity, 'nestjsdemo')
+    private articleRepository: Repository<ArticleEntity>,
+  ) {}
 
-  async getArticle(dateQuery: ArticleDateQueryDTO): Promise<ArticleDTO[]> {
+  async getArticle(
+    userId: number,
+    dateQuery: ArticleDateQueryDTO,
+  ): Promise<ArticleDTO[]> {
+    let option;
     if (dateQuery && Object.keys(dateQuery).length > 0) {
-      const result = this.articles.filter((article) => {
-        return dateQuery.endDate
-          ? article.publishDate > new Date(dateQuery.startDate) &&
-              article.publishDate < new Date(dateQuery.endDate)
-          : article.publishDate > new Date(dateQuery.startDate);
-      });
-      return result;
+      option = dateQuery.endDate
+        ? {
+            where: {
+              createdAt: Between(dateQuery.startDate, dateQuery.endDate),
+            },
+          }
+        : {
+            where: { createdAt: MoreThanOrEqual(dateQuery.startDate) },
+          };
+      option.where = {
+        ...option.where,
+        ownerId: userId,
+      };
     } else {
-      return this.articles;
+      option = { where: { ownerId: userId } };
     }
+
+    const articleEnties = await this.articleRepository.find(option);
+    return articleEnties.map((articleEntity: ArticleEntity) =>
+      articleEntity.toArticleDTO(),
+    );
   }
 
-  async getArticleById(id: number) {
-    const res = this.articles.find((article) => article.id === id);
-    if (res) {
-      return res;
+  async getArticleById(userId: number, id: number) {
+    const articleEntity = await this.articleRepository.findOne({
+      where: { ownerId: userId },
+      relations: ['comments'],
+    });
+
+    if (articleEntity) {
+      return articleEntity.toArticleDTO();
     } else {
       throw new NotFoundException(`can't find article with id ${id}`);
     }
   }
 
-  async createArticle(article: ArticleDTO): Promise<ArticleDTO> {
-    article.id = this.articles.length;
-    this.articles = [...this.articles, article];
-    return article;
+  async createArticle(
+    userId: number,
+    article: ArticleDTO,
+  ): Promise<ArticleDTO> {
+    const articleEntity = new ArticleEntity();
+    articleEntity.name = article.name;
+    articleEntity.ownerId = userId;
+    const res = await this.articleRepository.save(articleEntity);
+    return res.toArticleDTO();
   }
 }

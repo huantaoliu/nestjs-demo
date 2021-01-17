@@ -1,4 +1,11 @@
-import { IsDataURI, IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsDataURI,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { UserDTO } from './user.dto';
 
 export class ArticleDTO {
   @IsNumber()
@@ -9,7 +16,4 @@ export class ArticleDTO {
   name: string;
 
   publishDate: Date;
-
-  @IsNumber()
-  owner: number;
 }
