@@ -45,28 +45,50 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Test
+## Section 1: Nest fundamentals
 
-```bash
-# unit tests
-$ npm run test
+Controller
 
-# e2e tests
-$ npm run test:e2e
+Providers and DI
 
-# test coverage
-$ npm run test:cov
+Pipes
+
+Exception Handler
+
+Guards
+
+## Section 2: Authentication & Authorization
+
+This will demo how to use JWT and guards to do the Authentication and Authorization
+
+## Section 3: ORM libs - connect with database
+
+Using TypeORM demo how to connect with postgres Database. In this branch, to visulize the database better, you can use docker container:
+
+- pgAdmin: to visulize postgres db (https://hub.docker.com/r/dpage/pgadmin4/)
+- portainer: docker container manager (https://hub.docker.com/r/portainer/portainer)
+
+## Section 4: Use with Docker
+
+Dockerlize this app, and postgres db, run the the app in docker
+
+### Create docker image of this app
+
+```
+npm run build:docker:image
 ```
 
-## Support
+### Run docker instance of db
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```
+ docker-compose -f docker-compose.yaml up -d
+```
 
-## Stay in touch
+## Section 5: Swagger Support
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Add swagger annotation to all controller endpoints and DTOs
+address: _http://localhost:3000/swagger_
+json: _http://localhost:3000/swagger-json_
 
 ## License
 

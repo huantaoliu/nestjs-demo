@@ -18,8 +18,8 @@ services:
     container_name: nestjs-demo
     image: nestjs-demo:latest
     environment:
-      PP_PORT: 3000
-      DB_PORT: 5435
+      APP_PORT: 3000
+      DB_PORT: 5432
       DB_HOST: nestjs-demo-db
       DB_DATABASE: 'nestjs-demo-db'
       DB_USERNAME: 'postgres'
