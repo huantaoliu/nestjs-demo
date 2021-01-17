@@ -41,7 +41,9 @@ export class ArticleEntity extends BaseEntity {
     return {
       id: this.id,
       name: this.name,
-      comments: this.comments ? [...this.comments] : [],
+      comments: this.comments
+        ? [...this.comments.map((comment) => comment.toCommentDTO())]
+        : [],
       publishDate: this.createdAt,
     };
   }

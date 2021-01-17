@@ -11,6 +11,12 @@ import {
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
+import {
+  ApiHeader,
+  ApiNotFoundResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../guard/jwt-auth-guard';
 import { ArticleDTO } from '../model/article.dto';
 import { ArticleDateQueryDTO } from '../model/article.query.dto';
@@ -18,10 +24,17 @@ import { ArticleService } from './article.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('article')
+@ApiTags('Article')
+@ApiHeader({
+  name: 'access_token',
+  description: 'access token in header',
+})
+@ApiResponse({ status: 401, description: 'unauthorized' })
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
 
   @Get()
+  @ApiResponse({ status: 200, description: 'OK', type: [ArticleDTO] })
   async getArticle(
     @Req() req,
     @Query(ValidationPipe) query: ArticleDateQueryDTO,
@@ -30,6 +43,8 @@ export class ArticleController {
   }
 
   @Get(':id')
+  @ApiNotFoundResponse({ description: 'Article not found' })
+  @ApiResponse({ status: 200, description: 'OK', type: ArticleDTO })
   async findOne(
     @Req() req,
     @Param('id', ParseIntPipe) id: number,
@@ -39,6 +54,7 @@ export class ArticleController {
 
   @Post()
   @HttpCode(201)
+  @ApiResponse({ status: 201, description: 'Created', type: ArticleDTO })
   async create(
     @Req() req,
     @Body(new ValidationPipe({ forbidNonWhitelisted: true, whitelist: true }))
