@@ -41,4 +41,13 @@ export class CommentEntity extends BaseEntity {
   })
   @JoinColumn({ name: 'creatorId' })
   creator: UserEntity;
+
+  toCommentDTO() {
+    return {
+      id: this.id,
+      content: this.content,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }
