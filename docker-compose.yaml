@@ -13,3 +13,19 @@ services:
       PGDATA: '/var/lib/postgresql/data'
     volumes:
       - ./pgdata:/var/ib/postgresql/data
+
+  app:
+    container_name: nestjs-demo
+    image: nestjs-demo:latest
+    environment:
+      PP_PORT: 3000
+      DB_PORT: 5435
+      DB_HOST: nestjs-demo-db
+      DB_DATABASE: 'nestjs-demo-db'
+      DB_USERNAME: 'postgres'
+      DB_PASSWORD: 'postgres'
+      SECRET_KEY: test
+    ports:
+      - '3000:3000'
+    depends_on:
+      - nestjs-demo-db
